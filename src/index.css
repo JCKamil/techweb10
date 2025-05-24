@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+h1 {
+  @apply font-bold text-2xl;
+}
+
+#button {
+  @apply bg-blue-500 p-4;
+}
