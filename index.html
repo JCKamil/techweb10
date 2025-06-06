@@ -1,42 +1,9 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Artykuły</title>
-  <script type="module" src="/main.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-      background: #f4f4f4;
-    }
-    .article {
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ccc;
-    }
-    form {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ccc;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
   <h1>Lista artykułów</h1>
@@ -44,11 +11,14 @@
 
   <h2>Dodaj nowy artykuł</h2>
   <form id="articleForm">
-    <input type="text" id="title" placeholder="Tytuł" required />
-    <input type="text" id="subtitle" placeholder="Podtytuł" />
-    <input type="text" id="author" placeholder="Autor" required />
-    <textarea id="content" placeholder="Treść" required></textarea>
+    <input type="text" id="title" placeholder="Tytuł" required /><br />
+    <input type="text" id="subtitle" placeholder="Podtytuł" required /><br />
+    <input type="text" id="author" placeholder="Autor" required /><br />
+    <textarea id="content" placeholder="Treść" required></textarea><br />
     <button type="submit">Dodaj artykuł</button>
   </form>
+
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
+
