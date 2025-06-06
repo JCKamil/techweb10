@@ -1,42 +1,73 @@
-import './style.css';
-import { createClient } from '@supabase/supabase-js';
-import { format } from 'date-fns';
+// Ustawienia Supabase
+const API_URL = 'https://fvgkwcvwqbdugexretbi.supabase.co/rest/v1/articles';
+const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2Z2t3Y3Z3cWJkdWdleHJldGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyMDAwMzMsImV4cCI6MjA2NDc3NjAzM30.1uQjmY4OKycYzSUl-q9VFWjYiRTNux36i7H17T1pmmA'; // ← Twój prawdziwy "anon" klucz
 
-const supabase = createClient('https://fvgkwcvwqbdugexretbi.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2Z2t3Y3Z3cWJkdWdleHJldGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyMDAwMzMsImV4cCI6MjA2NDc3NjAzM30.1uQjmY4OKycYzSUl-q9VFWjYiRTNux36i7H17T1pmmA ');
+// Pobierz artykuły i wyświetl je
+async function fetchArticles() {
+  try {
+    const response = await fetch(API_URL, {
+      headers: {
+        apikey: API_KEY,
+        Authorization: `Bearer ${API_KEY}`
+      }
+    });
 
-const articleList = document.querySelector('#article-list');
-const form = document.querySelector('#article-form');
-const sortSelect = document.querySelector('#sort-select');
+    const articles = await response.json();
+    const container = document.getElementById('articlesContainer');
+    container.innerHTML = '';
 
-async function fetchArticles(sort = 'created_at.desc') {
-  const [field, direction] = sort.split('.');
-  const { data: article } = await supabase
-    .from('article')
-    .select('*')
-    .order(field, { ascending: direction === 'asc' });
+    articles.forEach(article => {
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <h2>${article.title}</h2>
+        <h3>${article.subtitle}</h3>
+        <p><strong>Autor:</strong> ${article.author}</p>
+        <p><strong>Data:</strong> ${new Date(article.created_at).toLocaleDateString()}</p>
+        <p>${article.content}</p>
+        <hr>
+      `;
+      container.appendChild(div);
+    });
 
-  articleList.innerHTML = article.map(article => `
-    <div class="border p-4 rounded shadow">
-      <h2 class="text-xl font-bold">${article.title}</h2>
-      <h3 class="italic text-gray-600">${article.subtitle}</h3>
-      <p class="text-sm text-gray-500">Autor: ${article.author}</p>
-      <p class="text-sm text-gray-500">Data: ${format(new Date(article.created_at), 'dd-MM-yyyy')}</p>
-      <p>${article.content}</p>
-    </div>
-  `).join('');
+  } catch (err) {
+    console.error('Błąd przy pobieraniu artykułów:', err);
+  }
 }
 
-form.addEventListener('submit', async (e) => {
+// Dodaj artykuł do Supabase
+async function addArticle(e) {
   e.preventDefault();
-  const formData = new FormData(form);
-  const newArticle = Object.fromEntries(formData.entries());
-  await supabase.from('article').insert([newArticle]);
-  form.reset();
-  fetchArticles(sortSelect.value);
+
+  const title = document.getElementById('title').value;
+  const subtitle = document.getElementById('subtitle').value;
+  const author = document.getElementById('author').value;
+  const content = document.getElementById('content').value;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        apikey: API_KEY,
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation'
+      },
+      body: JSON.stringify([{ title, subtitle, author, content }])
+    });
+
+    if (!response.ok) throw new Error('Nie udało się dodać artykułu');
+
+    document.getElementById('articleForm').reset();
+    fetchArticles(); // odśwież listę
+
+  } catch (err) {
+    console.error('Błąd przy dodawaniu artykułu:', err);
+  }
+}
+
+// Po załadowaniu strony
+document.addEventListener('DOMContentLoaded', () => {
+  fetchArticles();
+  document.getElementById('articleForm').addEventListener('submit', addArticle);
 });
 
-sortSelect.addEventListener('change', () => {
-  fetchArticles(sortSelect.value);
-});
-
-fetchArticles();
