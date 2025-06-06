@@ -1,6 +1,6 @@
 async function fetchArticles() {
   const API_URL = 'https://fvgkwcvwqbdugexretbi.supabase.co/rest/v1/articles';
-  const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Twój pełny anon/public API key
+  const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2Z2t3Y3Z3cWJkdWdleHJldGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkyMDAwMzMsImV4cCI6MjA2NDc3NjAzM30.1uQjmY4OKycYzSUl-q9VFWjYiRTNux36i7H17T1pmmA'; // Twój pełny anon/public API key
 
   console.log('fetchArticles wywołane');
 
